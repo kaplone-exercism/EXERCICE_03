@@ -13,10 +13,12 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.shape.Circle;
 import javafx.fxml.FXML;
@@ -34,36 +36,27 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	@FXML
 	Circle cercle;
 	
+	@FXML
+	Label texte;
+	
+	@FXML
+	AnchorPane root;
+
+	Scene scene;
+	
+	Stage stagePrincipal;
+	
 	@Override
 	public void start(Stage primaryStage) {
+		
+		stagePrincipal = primaryStage;
+		
+		System.out.println(stagePrincipal);
+		
 		try {
 			
-			Scene scene = new Scene((Parent) JfxUtils.loadFxml("menu1.fxml"), 600, 400);
-			
-			Pane root = new Pane();
-			
-			Controlleur ct = new Controlleur();
-			ct.init();
-			r0 = ct.getR0();
-			
-			m1 = new Controlleur(2).getR0();
-			m1.setLayoutX(200);
-			
-			m2 = new Controlleur(2).getR0();
-			m2.setLayoutX(350);
-			
-			p1 = new Controlleur(Color.WHITE).getR0();
-			p1.setLayoutX(200);
-			p1.setLayoutY(100);
-			
-			root.getChildren().addAll( m1, r0, m2, p1);
+			scene = new Scene((Parent) JfxUtils.loadFxml("menu1.fxml"), 600, 400);
 
-//			Scene scene = new Scene(root,1000,600);
-//			
-//			root.setOnMouseClicked(e -> gerer_clicks(r0, e));
-//			scene.setOnKeyPressed(e1 -> gerer_keys(r0, e1));
-			
-			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
@@ -167,6 +160,39 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
+	public void nouvelleFenetre(){
+		
+		//root = new Pane();
+		
+		Controlleur ct = new Controlleur();
+		ct.init();
+		r0 = ct.getR0();
+		
+		m1 = new Controlleur(2).getR0();
+		m1.setLayoutX(200);
+		
+		m2 = new Controlleur(2).getR0();
+		m2.setLayoutX(350);
+		
+		p1 = new Controlleur(Color.WHITE).getR0();
+		p1.setLayoutX(200);
+		p1.setLayoutY(100);
+		
+		root.getChildren().clear();
+		root.getChildren().addAll( m1, r0, m2, p1);
+		
+		scene = root.getScene();
+		
+		
+		System.out.println(scene);
+		
+		root.setOnMouseClicked(e -> gerer_clicks(r0, e));
+		scene.setOnKeyPressed(e1 -> gerer_keys(r0, e1));
+		
+		//System.out.println(stagePrincipal);
+		
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -179,6 +205,10 @@ public class Main_Exercice_03 extends Application implements Initializable{
 				"ina.fr"
 				
 		};
+		
+		System.out.println(texte);
+		
+		texte.setOnMouseClicked(a -> nouvelleFenetre());
 		
 		cercle.setOnMouseClicked(a -> new Thread(new Runnable() {
 		
