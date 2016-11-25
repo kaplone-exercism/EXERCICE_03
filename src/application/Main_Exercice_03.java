@@ -210,10 +210,11 @@ public class Main_Exercice_03 extends Application implements Initializable{
 //		cercle.setOnMouseEntered(a -> cercle.setFill(Color.GREEN));
 //		cercle.setOnMouseExited(a -> cercle.setFill(Color.YELLOW));
 		
-		String [] command = new String [] {
-				"firefox",
-				"ina.fr"			
-		};
+//		String [] command = new String [] {
+//				"firefox",
+//				"ina.fr"			
+//		};
+		
 		maze.setOnMouseEntered(a -> maze.setImage(new Image("maze_v2.png")));
 		maze.setOnMouseExited(a -> maze.setImage(new Image("maze_v2_2_nb.png")));
 		
@@ -226,23 +227,24 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		settings.setOnMouseEntered(a -> settings.setImage(new Image("settings2.png")));
 		settings.setOnMouseExited(a -> settings.setImage(new Image("settings2_nb.png")));
 		
+		
 		exit.setOnMouseClicked(a -> System.exit(0));
+		launch.setOnMouseClicked(a -> nouvelleFenetre());	
 		
-		launch.setOnMouseClicked(a -> nouvelleFenetre());		
-		maze.setOnMouseClicked(a -> new Thread(new Runnable() {
-		
-			@Override
-			public void run() {
-				
-				System.out.println("run");
-				Process p;
-				try {
-					p = new ProcessBuilder(command).start();
-				}
-                catch (IOException e){
-                	e.printStackTrace();		
-				}			
-			}
-		}).start());
+//		maze.setOnMouseClicked(a -> new Thread(new Runnable() {
+//		
+//			@Override
+//			public void run() {
+//				
+//				System.out.println("run");
+//				Process p;
+//				try {
+//					p = new ProcessBuilder(command).start();
+//				}
+//                catch (IOException e){
+//                	e.printStackTrace();		
+//				}			
+//			}
+//		}).start());
 	}
 }
