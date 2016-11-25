@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 //import application.JfxUtils;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -19,6 +20,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.shape.Circle;
 import javafx.fxml.FXML;
@@ -33,11 +36,20 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	Rectangle  m2;
 	Rectangle  p1;
 
-	@FXML
-	Circle cercle;
+//	@FXML
+//	Circle cercle;
+//	
+//	@FXML
+//	Label texte;
 	
 	@FXML
-	Label texte;
+	ImageView maze;
+	@FXML
+	ImageView settings;
+	@FXML
+	ImageView launch;
+	@FXML
+	ImageView exit;
 	
 	@FXML
 	AnchorPane root;
@@ -49,13 +61,15 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	@Override
 	public void start(Stage primaryStage) {
 		
+		//primaryStage.initStyle(StageStyle.UNDECORATED);
+		
 		stagePrincipal = primaryStage;
 		
 		System.out.println(stagePrincipal);
 		
 		try {
 			
-			scene = new Scene((Parent) JfxUtils.loadFxml("menu1.fxml"), 600, 400);
+			scene = new Scene((Parent) JfxUtils.loadFxml("menu2.fxml"), 600, 400);
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -146,9 +160,6 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	}
 	
     private Rectangle gerer_clicks(Rectangle r, MouseEvent e){
-		 
-		System.out.println("Ã©venement souris");
-		System.out.println(e.getSceneX());
 		
 		r.setX(e.getSceneX());
 		r.setY(e.getSceneY());
@@ -163,7 +174,7 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	
 	public void nouvelleFenetre(){
 		
-		//root = new Pane();
+		//root = new AnchorPane();
 		
 		Controlleur ct = new Controlleur();
 		ct.init();
@@ -183,34 +194,42 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		root.getChildren().addAll( m1, r0, m2, p1);
 		
 		scene = root.getScene();
+		Stage primary = (Stage) scene.getWindow();
 		
-		
-		System.out.println(scene);
+		primary.setWidth(1000);
+		primary.setHeight(600);
 		
 		root.setOnMouseClicked(e -> gerer_clicks(r0, e));
 		scene.setOnKeyPressed(e1 -> gerer_keys(r0, e1));
-		
-		//System.out.println(stagePrincipal);
 		
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
-		cercle.setOnMouseEntered(a -> cercle.setFill(Color.GREEN));
-		cercle.setOnMouseExited(a -> cercle.setFill(Color.YELLOW));
+//		cercle.setOnMouseEntered(a -> cercle.setFill(Color.GREEN));
+//		cercle.setOnMouseExited(a -> cercle.setFill(Color.YELLOW));
 		
 		String [] command = new String [] {
 				"firefox",
-				"ina.fr"
-				
+				"ina.fr"			
 		};
+		maze.setOnMouseEntered(a -> maze.setImage(new Image("maze_v2.png")));
+		maze.setOnMouseExited(a -> maze.setImage(new Image("maze_v2_2_nb.png")));
 		
-		System.out.println(texte);
+		launch.setOnMouseEntered(a -> launch.setImage(new Image("launch_2.png")));
+		launch.setOnMouseExited(a -> launch.setImage(new Image("launch_nb.png")));
 		
-		texte.setOnMouseClicked(a -> nouvelleFenetre());
+		exit.setOnMouseEntered(a -> exit.setImage(new Image("exit_0.png")));
+		exit.setOnMouseExited(a -> exit.setImage(new Image("exit.png")));
 		
-		cercle.setOnMouseClicked(a -> new Thread(new Runnable() {
+		settings.setOnMouseEntered(a -> settings.setImage(new Image("settings2.png")));
+		settings.setOnMouseExited(a -> settings.setImage(new Image("settings2_nb.png")));
+		
+		exit.setOnMouseClicked(a -> System.exit(0));
+		
+		launch.setOnMouseClicked(a -> nouvelleFenetre());		
+		maze.setOnMouseClicked(a -> new Thread(new Runnable() {
 		
 			@Override
 			public void run() {
@@ -221,10 +240,8 @@ public class Main_Exercice_03 extends Application implements Initializable{
 					p = new ProcessBuilder(command).start();
 				}
                 catch (IOException e){
-                	e.printStackTrace();
-				
-				}
-				
+                	e.printStackTrace();		
+				}			
 			}
 		}).start());
 	}
