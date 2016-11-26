@@ -1,6 +1,10 @@
 package application;
 
 import javafx.scene.shape.Rectangle;
+import models.Mur;
+import enums.Sens;
+import javafx.scene.Node;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
 public class Contact {
@@ -18,6 +22,30 @@ public class Contact {
 		
 
 		return false; // ça sert pas a grand chose
+	}
+	
+	public static boolean rienNeBloque(Rectangle r, Sens sens, AnchorPane root){
+		
+		
+		
+		for (Node n : root.getChildren()){
+			try {
+				Mur m = (Mur) n;
+				if (m.estEnContact(sens, r)){
+					if (m.estOuvert(sens, r)){
+						if(m.bloque(sens, r)){
+							return false;
+						}
+						return true;
+					}
+					return false;
+				}
+			}
+			catch (ClassCastException cce){				
+			}
+		}
+		
+		return true;
 	}
 
 }

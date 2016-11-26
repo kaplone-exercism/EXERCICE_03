@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import enums.Orientation;
+import enums.Sens;
 //import application.Contact;
 //import application.Controlleur;
 //import application.JfxUtils;
@@ -83,25 +84,33 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		System.out.println(kc.getName());
 		
 		switch (kc) {
-		case UP: r.setY(r.getY() - 5);			
+		case UP: if (Contact.rienNeBloque(r0, Sens.HAUT, root)){
+			r.setY(r.getY() - 5);
+		}
 			break;
-		case DOWN: r.setY(r.getY() + 5);			
+		case DOWN: if (Contact.rienNeBloque(r0, Sens.BAS, root)){
+			r.setY(r.getY() + 5);
+		}
 		break;
-		case LEFT: r.setX(r.getX() - 5);
+		case LEFT: if (Contact.rienNeBloque(r0, Sens.GAUCHE, root)){
+			r.setX(r.getX() - 5);
+		}
 		break;
-		case RIGHT: r.setX(r.getX() + 6);
+		case RIGHT: if (Contact.rienNeBloque(r0, Sens.DROITE, root)){
+			r.setX(r.getX() + 5);
+		}
 		break;
 		case Z: r.setY(r.getY() - 5 - bonus);
-		r.setFill(Color.PINK);
+		        r.setFill(Color.PINK);
 		break;
 		case S: r.setY(r.getY() + 5 + bonus);
-		r.setFill(Color.BLUE);
+		        r.setFill(Color.BLUE);
 		break;
 		case Q: r.setX(r.getX() - 5 - bonus);
-		r.setFill(Color.ORANGE);
+		        r.setFill(Color.ORANGE);
 		break;
 		case D: r.setX(r.getX() + 5 + bonus);
-		r.setFill(Color.GREENYELLOW);
+		        r.setFill(Color.GREENYELLOW);
 		break;
 		case NUMPAD9 : r.setFill(Color.BLACK);
         break;
@@ -129,10 +138,7 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		break;
 		}
 		
-		Contact.estEnContact(r0, m1);
-
-		return r;
-		
+		return r;		
 	}
 	
     private Rectangle gerer_clicks(Rectangle r, MouseEvent e){

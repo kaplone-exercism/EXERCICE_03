@@ -30,15 +30,87 @@ public class Mur extends Rectangle{
 		this.portes = portes;
 	}
 	
-	public boolean bloque(Sens sens, int coordonnees){
+	public boolean bloque(Sens sens, Rectangle r){
+//		switch (sens){
+//		case BAS :
+//	    case HAUT : if (orientation == Orientation.VERTICAL){
+//	    	           return false;
+//	                }
+//	                else {
+//	                   return this.debut - (r.getX() + r.getWidth()) >= 0 
+//	                	   || r.getX() - this.fin >= 0; 
+//	                }
+//	     
+//	    case GAUCHE :
+//	    case DROITE : if (orientation == Orientation.HORIZONTAL){
+// 			           return false;
+//						}
+//						else {
+//						   return this.debut - (r.getY() + r.getHeight()) >= 0
+//							   || r.getY() - this.fin >= 0 ; 
+//						}
+//	    }
         return false;
 	}
 	
-	public boolean estOuvert(Sens sens, int coordonnees){
+	public boolean estOuvert(Sens sens, Rectangle r){
+		
+		switch (sens){
+		case BAS :
+	    case HAUT : if (orientation == Orientation.VERTICAL){
+	    	           return false;
+	                }
+	                else {
+	                   return this.debut - (r.getX() + r.getWidth()) >= 0 
+	                	   || r.getX() - this.fin >= 0; 
+	                }
+	     
+	    case GAUCHE :
+	    case DROITE : if (orientation == Orientation.HORIZONTAL){
+ 			           return false;
+						}
+						else {
+						   return this.debut - (r.getY() + r.getHeight()) >= 0
+							   || r.getY() - this.fin >= 0 ; 
+						}
+	    }
         return false;
 	}
 	
-	public boolean estEnContact(Sens sens, int coordonnees){
+	public boolean estEnContact(Sens sens, Rectangle r){
+		
+		switch (sens){
+		    case HAUT : if (orientation == Orientation.VERTICAL){
+		    	           return false;
+		                }
+		                else {
+		                   System.out.println(r.getY() - this.position + this.epaisseur);	
+		                   return r.getY() - (this.position + this.epaisseur) >= 0 
+		                	   && r.getY() - (this.position + this.epaisseur) <= 5; 
+		                }
+		    case BAS : if (orientation == Orientation.VERTICAL){
+ 	           			   return false;
+             			}
+             			else {
+             			   return this.position - (r.getY() + r.getHeight()) >= 0 
+             				   && this.position - (r.getY() + r.getHeight()) <= 5 ; 
+                        }
+		    case GAUCHE : if (orientation == Orientation.HORIZONTAL){
+ 	           			   return false;
+             			}
+             			else {
+             			   return r.getX() - (this.position + this.epaisseur) >= 0 
+             				   && r.getX() - (this.position + this.epaisseur) <= 5; 
+             			}
+		    case DROITE : if (orientation == Orientation.HORIZONTAL){
+     			           return false;
+  						}
+  						else {
+  						   return this.position - (r.getX() + r.getWidth()) >= 0
+  							   && this.position - (r.getX() + r.getWidth()) <= 5 ; 
+  						}
+		}
+		
 		return false;
 	}
 	
