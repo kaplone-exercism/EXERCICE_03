@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import enums.Orientation;
 //import application.Contact;
 //import application.Controlleur;
 //import application.JfxUtils;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import models.Mur;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -34,14 +36,11 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	Rectangle  r0;
 	Rectangle  m1;
 	Rectangle  m2;
+	Rectangle  m3;
+	Rectangle  m4;
+	Rectangle  m5;
 	Rectangle  p1;
 
-//	@FXML
-//	Circle cercle;
-//	
-//	@FXML
-//	Label texte;
-	
 	@FXML
 	ImageView maze;
 	@FXML
@@ -63,15 +62,13 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		
 		//primaryStage.initStyle(StageStyle.UNDECORATED);
 		
-		stagePrincipal = primaryStage;
-		
-		System.out.println(stagePrincipal);
-		
 		try {
 			
 			scene = new Scene((Parent) JfxUtils.loadFxml("menu2.fxml"), 600, 400);
 
 			primaryStage.setScene(scene);
+			primaryStage.setWidth(600);
+			primaryStage.setHeight(435);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -128,32 +125,11 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		break;
 		case SUBTRACT: bonus -= 5;
 		break;
+		case ESCAPE: start(stagePrincipal);
+		break;
 		}
 		
 		Contact.estEnContact(r0, m1);
-//		String l = e.getCharacter();
-//		System.out.println(l);
-//		
-//		switch(l){
-//		case "8" : r.setY(r.getY() - 5);
-//		           break;
-//		case "2" : r.setY(r.getY() + 5);
-//        break;
-//		case "4" : r.setX(r.getX() - 5);
-//        break;
-//		case "6" : r.setX(r.getX() + 5);
-//        break;
-//		case "5" : double temp_X = r.getX();
-//			       r.setX(r.getY());
-//		           r.setY(temp_X);
-//        break;
-//		case "b" : r.setFill(Color.CORNFLOWERBLUE);
-//        break;
-//		case "o" : r.setFill(Color.ORANGE);
-//        break;
-//		case "v" : r.setFill(Color.MEDIUMPURPLE);
-//        break;
-//		}
 
 		return r;
 		
@@ -173,34 +149,39 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	}
 	
 	public void nouvelleFenetre(){
-		
-		//root = new AnchorPane();
-		
+
 		Controlleur ct = new Controlleur();
 		ct.init();
 		r0 = ct.getR0();
 		
-		m1 = new Controlleur(2).getR0();
-		m1.setLayoutX(200);
+		m1 = new Mur(Orientation.VERTICAL, 15, 150, 0, 400, null);		
+		m2 = new Mur(Orientation.VERTICAL, 15, 350, 50, 600, null);		
+		m3 = new Mur(Orientation.VERTICAL, 15, 700, 200, 500, null);
 		
-		m2 = new Controlleur(2).getR0();
-		m2.setLayoutX(350);
-		
-		p1 = new Controlleur(Color.WHITE).getR0();
-		p1.setLayoutX(200);
-		p1.setLayoutY(100);
-		
+		m4 = new Mur(Orientation.HORIZONTAL, 15, 200, 100, 500, null);		
+		m5 = new Mur(Orientation.HORIZONTAL, 15, 500, 300, 800, null);
+				
 		root.getChildren().clear();
-		root.getChildren().addAll( m1, r0, m2, p1);
+		root.getChildren().addAll( m1, r0, m2, m3, m4, m5);
 		
 		scene = root.getScene();
-		Stage primary = (Stage) scene.getWindow();
+		stagePrincipal = (Stage) scene.getWindow();
 		
-		primary.setWidth(1000);
-		primary.setHeight(600);
+		stagePrincipal.setWidth(1000);
+		stagePrincipal.setHeight(600);
 		
 		root.setOnMouseClicked(e -> gerer_clicks(r0, e));
 		scene.setOnKeyPressed(e1 -> gerer_keys(r0, e1));
+		
+	}
+	
+    public void nouvelleFenetreSettings(){
+		
+		ControlleurSettings cts = new ControlleurSettings();
+		root = cts.init(root);
+		
+//		root.setOnMouseClicked(e -> gerer_clicks(r0, e));
+//		scene.setOnKeyPressed(e1 -> gerer_keys(r0, e1));
 		
 	}
 
@@ -227,7 +208,7 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		settings.setOnMouseEntered(a -> settings.setImage(new Image("settings2.png")));
 		settings.setOnMouseExited(a -> settings.setImage(new Image("settings2_nb.png")));
 		
-		
+		settings.setOnMouseClicked(a -> nouvelleFenetreSettings());
 		exit.setOnMouseClicked(a -> System.exit(0));
 		launch.setOnMouseClicked(a -> nouvelleFenetre());	
 		
