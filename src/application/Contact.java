@@ -24,28 +24,33 @@ public class Contact {
 		return false; // ça sert pas a grand chose
 	}
 	
-	public static boolean rienNeBloque(Rectangle r, Sens sens, AnchorPane root){
+	public static int rienNeBloque(Rectangle r, Sens sens, AnchorPane root){
 		
-		
-		
+		int delta = 0;
+
 		for (Node n : root.getChildren()){
 			try {
 				Mur m = (Mur) n;
-				if (m.estEnContact(sens, r)){
+				if (m.estEnContact(sens, r) < 5){
 					if (m.estOuvert(sens, r)){
 						if(m.bloque(sens, r)){
-							return false;
+							return m.estEnContact(sens, r);
 						}
-						return true;
+						else {
+							delta = 5;
+						}	
 					}
-					return false;
+					else {
+						return m.estEnContact(sens, r);
+					}
+				}
+				else {
+					delta = 5;
 				}
 			}
 			catch (ClassCastException cce){				
 			}
 		}
-		
-		return true;
+		return delta;		
 	}
-
 }

@@ -56,62 +56,90 @@ public class Mur extends Rectangle{
 	public boolean estOuvert(Sens sens, Rectangle r){
 		
 		switch (sens){
-		case BAS :
+		case BAS :  
 	    case HAUT : if (orientation == Orientation.VERTICAL){
-	    	           return false;
+	    				return !(r.getX() > this.position - r.getWidth()
+	    				      && r.getX() < this.position + this.epaisseur);
 	                }
 	                else {
 	                   return this.debut - (r.getX() + r.getWidth()) >= 0 
-	                	   || r.getX() - this.fin >= 0; 
+	                	                 || r.getX() - this.fin >= 0; 
 	                }
 	     
 	    case GAUCHE :
 	    case DROITE : if (orientation == Orientation.HORIZONTAL){
- 			           return false;
+ 			           return !(r.getY() > this.position - r.getHeight()
+ 			                 && r.getY() < this.position + this.epaisseur);
 						}
 						else {
 						   return this.debut - (r.getY() + r.getHeight()) >= 0
-							   || r.getY() - this.fin >= 0 ; 
+							                 || r.getY() - this.fin >= 0 ; 
 						}
 	    }
         return false;
 	}
 	
-	public boolean estEnContact(Sens sens, Rectangle r){
+	public int estEnContact(Sens sens, Rectangle r){
 		
 		switch (sens){
 		    case HAUT : if (orientation == Orientation.VERTICAL){
-		    	           return false;
+                			if(r.getY() - this.fin >= 0 
+                			&& r.getY() - this.fin < 5){
+             	               return (int) (r.getY() - this.fin);
+                            }
+                            else return 5;
 		                }
 		                else {
-		                   System.out.println(r.getY() - this.position + this.epaisseur);	
-		                   return r.getY() - (this.position + this.epaisseur) >= 0 
-		                	   && r.getY() - (this.position + this.epaisseur) <= 5; 
+		                   if(r.getY() - (this.position + this.epaisseur) >= 0 
+		                   && r.getY() - (this.position + this.epaisseur) < 5){
+		                	   return (int) (r.getY() - (this.position + this.epaisseur));
+		                   }
+		                   else return 5; 
 		                }
+		    
 		    case BAS : if (orientation == Orientation.VERTICAL){
- 	           			   return false;
+		    			  if(this.debut - (r.getY() + r.getHeight()) >= 0
+	    				  && this.debut - (r.getY() + r.getHeight()) <= 5){
+						     return  (int) (this.debut - (r.getY() + r.getHeight())); 
+					   }
+					   else return 5;
              			}
              			else {
-             			   return this.position - (r.getY() + r.getHeight()) >= 0 
-             				   && this.position - (r.getY() + r.getHeight()) <= 5 ; 
+             			   if(this.position - (r.getY() + r.getHeight()) >= 0 
+             			   && this.position - (r.getY() + r.getHeight()) <= 5){
+             				   return (int) (this.position - (r.getY() + r.getHeight()));
+             			   }
                         }
 		    case GAUCHE : if (orientation == Orientation.HORIZONTAL){
- 	           			   return false;
+		    				if(r.getX() - this.fin >= 0
+		    				&& r.getX() - this.fin <= 5){
+		    					return  (int) (r.getX() - this.fin); 
+					   }
+					   else return 5;
              			}
              			else {
-             			   return r.getX() - (this.position + this.epaisseur) >= 0 
-             				   && r.getX() - (this.position + this.epaisseur) <= 5; 
+             			   if(r.getX() - (this.position + this.epaisseur) >= 0 
+             				   && r.getX() - (this.position + this.epaisseur) <= 5){
+             				   return (int) (r.getX() - (this.position + this.epaisseur));
+             			   } 
+             			   else return 5;
              			}
 		    case DROITE : if (orientation == Orientation.HORIZONTAL){
-     			           return false;
+		    				if(this.debut - (r.getX() + r.getWidth()) >= 0
+		    				&& this.debut - (r.getX() + r.getWidth()) <= 5){
+							   return  (int) (this.debut - (r.getX() + r.getWidth())); 
+						   }
+						   else return 5;
   						}
   						else {
-  						   return this.position - (r.getX() + r.getWidth()) >= 0
-  							   && this.position - (r.getX() + r.getWidth()) <= 5 ; 
+  						   if(this.position - (r.getX() + r.getWidth()) >= 0
+  						   && this.position - (r.getX() + r.getWidth()) <= 5){
+  							   return  (int) (this.position - (r.getX() + r.getWidth())); 
+  						   }
+  						   else return 5;
   						}
 		}
-		
-		return false;
+		return 5;
 	}
 	
     public boolean estEnTravers(Sens sens){

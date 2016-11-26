@@ -81,25 +81,17 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		
 		KeyCode kc = e.getCode();
 		
-		System.out.println(kc.getName());
+		//System.out.println(kc.getName());
 		
 		switch (kc) {
-		case UP: if (Contact.rienNeBloque(r0, Sens.HAUT, root)){
-			r.setY(r.getY() - 5);
-		}
+		case UP:   r.setY(r.getY() - Contact.rienNeBloque(r0, Sens.HAUT, root));
 			break;
-		case DOWN: if (Contact.rienNeBloque(r0, Sens.BAS, root)){
-			r.setY(r.getY() + 5);
-		}
-		break;
-		case LEFT: if (Contact.rienNeBloque(r0, Sens.GAUCHE, root)){
-			r.setX(r.getX() - 5);
-		}
-		break;
-		case RIGHT: if (Contact.rienNeBloque(r0, Sens.DROITE, root)){
-			r.setX(r.getX() + 5);
-		}
-		break;
+		case DOWN: r.setY(r.getY() + Contact.rienNeBloque(r0, Sens.BAS, root));
+		    break;
+		case LEFT: r.setX(r.getX() - Contact.rienNeBloque(r0, Sens.GAUCHE, root));
+		    break;
+		case RIGHT: r.setX(r.getX() + Contact.rienNeBloque(r0, Sens.DROITE, root));
+		    break;
 		case Z: r.setY(r.getY() - 5 - bonus);
 		        r.setFill(Color.PINK);
 		break;
