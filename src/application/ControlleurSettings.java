@@ -6,12 +6,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+
+import javax.swing.JSpinner.ListEditor;
 
 import enums.Orientation;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
@@ -33,6 +38,8 @@ public class ControlleurSettings implements Initializable{
 	
 	public AnchorPane init(AnchorPane root) {
 		
+		Scene scene = root.getScene();
+		
         FileReader fr = null;
         root.getChildren().clear();
         ScrollPane sc = new ScrollPane();
@@ -44,6 +51,9 @@ public class ControlleurSettings implements Initializable{
         vb.setPrefSize(580, 435);
         HBox hb = null;
         AnchorPane preview = null;
+        AnchorPane fullGame = null;
+        List<AnchorPane> tousLesNiveauxPreview = new ArrayList<>();
+        List<AnchorPane> tousLesNiveaux = new ArrayList<>();
     	
 		try {
 			fr = new FileReader(settings_file);
@@ -62,14 +72,22 @@ public class ControlleurSettings implements Initializable{
 	    			if (hb != null){
 	    				hb.getChildren().add(preview);
 	    				vb.getChildren().add(hb);
+	    				tousLesNiveaux.add(fullGame);
+	    				fullGame.getChildren().clear();
+	    				
 	    			}
 	    			
 	    			hb = new HBox();
 	    			hb.setPadding(new Insets(20));
 	    			preview = new AnchorPane();
+	    			tousLesNiveauxPreview.add(preview);
 	    			preview.setPrefWidth(200);
 	    			preview.setPrefHeight(120);
 	    			preview.getChildren().add(new Rectangle(200,120, Color.WHITE));
+	    			
+	    			fullGame = new AnchorPane();
+	    			fullGame.setPrefWidth(1000);
+	    			fullGame.setPrefHeight(600);
 	    			
 	    			Label l = new Label(s.split("\\[")[1].split("\\]")[0] + " : ");
 	    			hb.getChildren().add(l);
@@ -84,6 +102,13 @@ public class ControlleurSettings implements Initializable{
 	    			int fin = Integer.parseInt(ligne.split(",")[4].trim()) / 5;
 	    			preview.getChildren().add(new Mur(or, epais, dist, debut, fin, null));
 	    			
+	    			epais = Integer.parseInt(ligne.split(",")[1].trim());
+	    			dist = Integer.parseInt(ligne.split(",")[2].trim());
+	    			debut = Integer.parseInt(ligne.split(",")[3].trim());
+	    			fin = Integer.parseInt(ligne.split(",")[4].trim());
+	    			fullGame.getChildren().add(new Mur(or, epais, dist, debut, fin, null));
+	    			
+	    			preview.setOnMouseClicked(a -> scene.setRoot(tousLesNiveaux.get(tousLesNiveauxPreview.indexOf(preview))));	
 	    		}
 	    		s = br.readLine();
 	    	}
@@ -94,6 +119,7 @@ public class ControlleurSettings implements Initializable{
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
+		
 		
 		sc.setContent(vb);
 		root.getChildren().add(sc);
