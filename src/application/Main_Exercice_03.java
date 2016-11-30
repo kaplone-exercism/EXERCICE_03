@@ -29,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.shape.Circle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 
 public class Main_Exercice_03 extends Application implements Initializable{
@@ -78,7 +79,7 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		}
 	}
 	
-	private Rectangle gerer_keys(Rectangle r, KeyEvent e){
+	public Rectangle gerer_keys(Rectangle r, KeyEvent e, AnchorPane root, Stage Importedstage){
 		
 		
 		KeyCode kc = e.getCode();
@@ -86,24 +87,24 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		//System.out.println(kc.getName());
 		
 		switch (kc) {
-		case UP:   r.setY(r.getY() - Contact.rienNeBloque(r0, Sens.HAUT, root));
+		case UP:   r.setY(r.getY() - Contact.rienNeBloque(r, Sens.HAUT, root));
 			break;
-		case DOWN: r.setY(r.getY() + Contact.rienNeBloque(r0, Sens.BAS, root));
+		case DOWN: r.setY(r.getY() + Contact.rienNeBloque(r, Sens.BAS, root));
 		    break;
-		case LEFT: r.setX(r.getX() - Contact.rienNeBloque(r0, Sens.GAUCHE, root));
+		case LEFT: r.setX(r.getX() - Contact.rienNeBloque(r, Sens.GAUCHE, root));
 		    break;
-		case RIGHT: r.setX(r.getX() + Contact.rienNeBloque(r0, Sens.DROITE, root));
+		case RIGHT: r.setX(r.getX() + Contact.rienNeBloque(r, Sens.DROITE, root));
 		    break;
-		case Z: r.setY(r.getY() - Contact.rienNeBloque(r0, Sens.HAUT, root));
+		case Z: r.setY(r.getY() - Contact.rienNeBloque(r, Sens.HAUT, root));
 		        r.setFill(Color.PINK);
 		break;
-		case S: r.setY(r.getY() + Contact.rienNeBloque(r0, Sens.BAS, root));
+		case S: r.setY(r.getY() + Contact.rienNeBloque(r, Sens.BAS, root));
 		        r.setFill(Color.BLUE);
 		break;
-		case Q: r.setX(r.getX() - Contact.rienNeBloque(r0, Sens.GAUCHE, root));
+		case Q: r.setX(r.getX() - Contact.rienNeBloque(r, Sens.GAUCHE, root));
 		        r.setFill(Color.ORANGE);
 		break;
-		case D: r.setX(r.getX() + Contact.rienNeBloque(r0, Sens.DROITE, root));
+		case D: r.setX(r.getX() + Contact.rienNeBloque(r, Sens.DROITE, root));
 		        r.setFill(Color.GREENYELLOW);
 		break;
 		case NUMPAD9 : r.setFill(Color.BLACK);
@@ -128,14 +129,14 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		break;
 		case SUBTRACT: bonus -= 5;
 		break;
-		case ESCAPE: start(stagePrincipal);
+		case ESCAPE: start(Importedstage);
 		break;
 		}
 		
 		return r;		
 	}
 	
-    private Rectangle gerer_clicks(Rectangle r, MouseEvent e){
+    public Rectangle gerer_clicks(Rectangle r, MouseEvent e){
 		
 		r.setX(e.getSceneX());
 		r.setY(e.getSceneY());
@@ -171,17 +172,14 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		stagePrincipal.setHeight(600);
 		
 		root.setOnMouseClicked(e -> gerer_clicks(r0, e));
-		scene.setOnKeyPressed(e1 -> gerer_keys(r0, e1));
+		scene.setOnKeyPressed(e1 -> gerer_keys(r0, e1, root, stagePrincipal));
 		
 	}
 	
     public void nouvelleFenetreSettings(){
 		
 		ControlleurSettings cts = new ControlleurSettings();
-		root = cts.init(root);
-		
-//		root.setOnMouseClicked(e -> gerer_clicks(r0, e));
-//		scene.setOnKeyPressed(e1 -> gerer_keys(r0, e1));
+		root = cts.init(root, this);
 		
 	}
 

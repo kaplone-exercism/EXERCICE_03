@@ -16,6 +16,7 @@ import javax.swing.JSpinner.ListEditor;
 import enums.Orientation;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -27,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import models.Mur;
 
 public class ControlleurSettings implements Initializable{
@@ -36,9 +38,9 @@ public class ControlleurSettings implements Initializable{
 	
 	
 	
-	public AnchorPane init(AnchorPane root) {
-		
-		Scene scene = root.getScene();
+	public AnchorPane init(AnchorPane root, Main_Exercice_03 main) {
+
+		final Scene scene = root.getScene();
 		
         FileReader fr = null;
         root.getChildren().clear();
@@ -50,10 +52,10 @@ public class ControlleurSettings implements Initializable{
         VBox vb = new VBox(); 
         vb.setPrefSize(580, 435);
         HBox hb = null;
+        Label l = null;
         AnchorPane preview = null;
         AnchorPane fullGame = null;
-        List<AnchorPane> tousLesNiveauxPreview = new ArrayList<>();
-        List<AnchorPane> tousLesNiveaux = new ArrayList<>();
+        final Map<Node, AnchorPane> tableauDesNiveaux = new HashMap<>();
     	
 		try {
 			fr = new FileReader(settings_file);
@@ -70,17 +72,35 @@ public class ControlleurSettings implements Initializable{
 	    		else if(s.startsWith("[")){
 	    			
 	    			if (hb != null){
+	    				
 	    				hb.getChildren().add(preview);
 	    				vb.getChildren().add(hb);
-	    				tousLesNiveaux.add(fullGame);
-	    				fullGame.getChildren().clear();
+	    				tableauDesNiveaux.put(preview, fullGame);
+	    				
+	    				preview.setOnMouseClicked(a -> {
+	    					
+	    					Controlleur ct = new Controlleur();
+	    					ct.init();
+	    					final Rectangle r0 = ct.getR0();
+
+	    					AnchorPane root_ = tableauDesNiveaux.get(a.getSource());
+	    					root_.getChildren().add(0, r0);
+
+	    					scene.setRoot(root_);
+		    				Stage stagePrincipal = (Stage) scene.getWindow();
+		    				
+		    				stagePrincipal.setWidth(1000);
+		    				stagePrincipal.setHeight(600);
+		    				
+		    				root.setOnMouseClicked(e -> main.gerer_clicks(r0, e));
+		    				scene.setOnKeyPressed(e1 -> main.gerer_keys(r0, e1, root_, stagePrincipal));
+		    			});
 	    				
 	    			}
 	    			
 	    			hb = new HBox();
 	    			hb.setPadding(new Insets(20));
 	    			preview = new AnchorPane();
-	    			tousLesNiveauxPreview.add(preview);
 	    			preview.setPrefWidth(200);
 	    			preview.setPrefHeight(120);
 	    			preview.getChildren().add(new Rectangle(200,120, Color.WHITE));
@@ -89,33 +109,55 @@ public class ControlleurSettings implements Initializable{
 	    			fullGame.setPrefWidth(1000);
 	    			fullGame.setPrefHeight(600);
 	    			
-	    			Label l = new Label(s.split("\\[")[1].split("\\]")[0] + " : ");
+	    			l = new Label(s.split("\\[")[1].split("\\]")[0] + " : ");
 	    			hb.getChildren().add(l);
 	    						
 	    		}
 	    		else {
 	    			String ligne = s.split("=")[1];
-	    			Orientation or = Orientation.valueOf(ligne.split(",")[0].trim());
-	    			int epais = Integer.parseInt(ligne.split(",")[1].trim()) / 5;
-	    			int dist = Integer.parseInt(ligne.split(",")[2].trim()) / 5;
-	    			int debut = Integer.parseInt(ligne.split(",")[3].trim()) / 5;
-	    			int fin = Integer.parseInt(ligne.split(",")[4].trim()) / 5;
-	    			preview.getChildren().add(new Mur(or, epais, dist, debut, fin, null));
 	    			
-	    			epais = Integer.parseInt(ligne.split(",")[1].trim());
-	    			dist = Integer.parseInt(ligne.split(",")[2].trim());
-	    			debut = Integer.parseInt(ligne.split(",")[3].trim());
-	    			fin = Integer.parseInt(ligne.split(",")[4].trim());
+	    			Orientation or = Orientation.valueOf(ligne.split(",")[0].trim());
+	    			
+	    			int epais = Integer.parseInt(ligne.split(",")[1].trim());
+	    			int dist = Integer.parseInt(ligne.split(",")[2].trim());
+	    			int debut = Integer.parseInt(ligne.split(",")[3].trim());
+	    			int fin = Integer.parseInt(ligne.split(",")[4].trim());
 	    			fullGame.getChildren().add(new Mur(or, epais, dist, debut, fin, null));
 	    			
+	    			epais = epais / 5;
+	    			dist = dist / 5;
+	    			debut = debut / 5;
+	    			fin = fin / 5;
 	    			
-	    			preview.setOnMouseClicked(a -> scene.setRoot(tousLesNiveaux.get(tousLesNiveauxPreview.indexOf(preview))));	
+	    			preview.getChildren().add(new Mur(or, epais, dist, debut, fin, null));
 	    		}
 	    		s = br.readLine();
 	    	}
 	    	
 	    	hb.getChildren().add(preview);
 			vb.getChildren().add(hb);
+			tableauDesNiveaux.put(preview, fullGame);
+		
+			preview.setOnMouseClicked(a -> {
+				
+				Controlleur ct = new Controlleur();
+				ct.init();
+				final Rectangle r0 = ct.getR0();
+				
+				AnchorPane root_ = tableauDesNiveaux.get(a.getSource());
+				
+				root_.getChildren().add(0, r0);
+
+				scene.setRoot(root_);
+				Stage stagePrincipal = (Stage) scene.getWindow();
+				
+				stagePrincipal.setWidth(1000);
+				stagePrincipal.setHeight(600);
+				
+				root.setOnMouseClicked(e -> main.gerer_clicks(r0, e));
+				scene.setOnKeyPressed(e1 -> main.gerer_keys(r0, e1, root_, stagePrincipal));
+			});
+			
 		} catch (IOException e) {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();

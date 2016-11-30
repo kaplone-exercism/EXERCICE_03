@@ -7,7 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Controlleur{
+public class Controlleur {
 	
 	private Rectangle perso;
 
