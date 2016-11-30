@@ -108,6 +108,7 @@ public class ControlleurSettings implements Initializable{
 	    			fin = Integer.parseInt(ligne.split(",")[4].trim());
 	    			fullGame.getChildren().add(new Mur(or, epais, dist, debut, fin, null));
 	    			
+	    			
 	    			preview.setOnMouseClicked(a -> scene.setRoot(tousLesNiveaux.get(tousLesNiveauxPreview.indexOf(preview))));	
 	    		}
 	    		s = br.readLine();
