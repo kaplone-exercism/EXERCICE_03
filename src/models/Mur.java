@@ -4,6 +4,7 @@ import java.util.List;
 
 import enums.Orientation;
 import enums.Sens;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Mur extends Rectangle{
@@ -28,6 +29,8 @@ public class Mur extends Rectangle{
 		this.debut = debut;
 		this.fin = fin;
 		this.portes = portes;
+		this.setFill(Settings.getCouleurMurs());
+		
 	}
 	
 	public boolean bloque(Sens sens, Rectangle r){

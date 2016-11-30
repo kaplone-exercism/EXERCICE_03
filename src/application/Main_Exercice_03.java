@@ -13,6 +13,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import models.Mur;
+import models.Settings;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -79,7 +80,7 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		}
 	}
 	
-	public Rectangle gerer_keys(Rectangle r, KeyEvent e, AnchorPane root, Stage Importedstage){
+	public Rectangle gerer_keys(Rectangle r, KeyEvent e, AnchorPane root, Stage importedstage){
 		
 		
 		KeyCode kc = e.getCode();
@@ -91,9 +92,21 @@ public class Main_Exercice_03 extends Application implements Initializable{
 			break;
 		case DOWN: r.setY(r.getY() + Contact.rienNeBloque(r, Sens.BAS, root));
 		    break;
-		case LEFT: r.setX(r.getX() - Contact.rienNeBloque(r, Sens.GAUCHE, root));
+		case LEFT: if (Settings.isRetourContact() && Contact.rienNeBloque(r, Sens.GAUCHE, root) < 5){
+			           r.setX(0);
+			           r.setY(0);
+		           }
+				   else {
+					   r.setX(r.getX() - Contact.rienNeBloque(r, Sens.GAUCHE, root));
+				   }
 		    break;
-		case RIGHT: r.setX(r.getX() + Contact.rienNeBloque(r, Sens.DROITE, root));
+		case RIGHT:  if (Settings.isRetourContact() && Contact.rienNeBloque(r, Sens.DROITE, root) < 5){
+	           		   r.setX(0);
+	                   r.setY(0);
+                     }
+		             else {
+		            	 r.setX(r.getX() + Contact.rienNeBloque(r, Sens.DROITE, root));
+		             }
 		    break;
 		case Z: r.setY(r.getY() - Contact.rienNeBloque(r, Sens.HAUT, root));
 		        r.setFill(Color.PINK);
@@ -129,7 +142,7 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		break;
 		case SUBTRACT: bonus -= 5;
 		break;
-		case ESCAPE: start(Importedstage);
+		case ESCAPE: start(importedstage);
 		break;
 		}
 		
@@ -148,39 +161,31 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	public static void main(String[] args) {
 		launch(args);
 	}
+
+	public void retourMenu(){
+		start(stagePrincipal);
+	}
 	
 	public void nouvelleFenetre(){
-
-		Controlleur ct = new Controlleur();
-		ct.init();
-		r0 = ct.getR0();
-		
-		m1 = new Mur(Orientation.VERTICAL, 15, 150, 0, 400, null);		
-		m2 = new Mur(Orientation.VERTICAL, 15, 350, 50, 600, null);		
-		m3 = new Mur(Orientation.VERTICAL, 15, 700, 200, 500, null);
-		
-		m4 = new Mur(Orientation.HORIZONTAL, 15, 200, 100, 500, null);		
-		m5 = new Mur(Orientation.HORIZONTAL, 15, 500, 300, 800, null);
-				
-		root.getChildren().clear();
-		root.getChildren().addAll( m1, r0, m2, m3, m4, m5);
 		
 		scene = root.getScene();
 		stagePrincipal = (Stage) scene.getWindow();
-		
-		stagePrincipal.setWidth(1000);
-		stagePrincipal.setHeight(600);
-		
-		root.setOnMouseClicked(e -> gerer_clicks(r0, e));
-		scene.setOnKeyPressed(e1 -> gerer_keys(r0, e1, root, stagePrincipal));
-		
+
+		ControlleurNiveaux ctn = new ControlleurNiveaux();
+		root = ctn.init(root, this);
+	
 	}
 	
     public void nouvelleFenetreSettings(){
 		
+    	scene = root.getScene();
+    	stagePrincipal = (Stage) scene.getWindow();
+    	
 		ControlleurSettings cts = new ControlleurSettings();
-		root = cts.init(root, this);
+		scene = cts.init(root, this);
 		
+		stagePrincipal.setScene(scene);
+	
 	}
 
 	@Override
