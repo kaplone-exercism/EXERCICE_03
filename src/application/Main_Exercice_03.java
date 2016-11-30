@@ -58,6 +58,8 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	
 	Stage stagePrincipal;
 	
+	Thread t_launch;
+	
 	@Override
 	public void start(Stage primaryStage) {
 		
@@ -92,16 +94,16 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		    break;
 		case RIGHT: r.setX(r.getX() + Contact.rienNeBloque(r0, Sens.DROITE, root));
 		    break;
-		case Z: r.setY(r.getY() - 5 - bonus);
+		case Z: r.setY(r.getY() - Contact.rienNeBloque(r0, Sens.HAUT, root));
 		        r.setFill(Color.PINK);
 		break;
-		case S: r.setY(r.getY() + 5 + bonus);
+		case S: r.setY(r.getY() + Contact.rienNeBloque(r0, Sens.BAS, root));
 		        r.setFill(Color.BLUE);
 		break;
-		case Q: r.setX(r.getX() - 5 - bonus);
+		case Q: r.setX(r.getX() - Contact.rienNeBloque(r0, Sens.GAUCHE, root));
 		        r.setFill(Color.ORANGE);
 		break;
-		case D: r.setX(r.getX() + 5 + bonus);
+		case D: r.setX(r.getX() + Contact.rienNeBloque(r0, Sens.DROITE, root));
 		        r.setFill(Color.GREENYELLOW);
 		break;
 		case NUMPAD9 : r.setFill(Color.BLACK);
@@ -197,8 +199,14 @@ public class Main_Exercice_03 extends Application implements Initializable{
 		maze.setOnMouseEntered(a -> maze.setImage(new Image("maze_v2.png")));
 		maze.setOnMouseExited(a -> maze.setImage(new Image("maze_v2_2_nb.png")));
 		
-		launch.setOnMouseEntered(a -> launch.setImage(new Image("launch_2.png")));
-		launch.setOnMouseExited(a -> launch.setImage(new Image("launch_nb.png")));
+		launch.setOnMouseEntered(a -> {
+			t_launch = new Thread(r_launch);
+			t_launch.start();
+		});
+		launch.setOnMouseExited(a -> {
+			t_launch.stop();
+			launch.setImage(new Image("launch_nb.png"));
+		});
 		
 		exit.setOnMouseEntered(a -> exit.setImage(new Image("exit_0.png")));
 		exit.setOnMouseExited(a -> exit.setImage(new Image("exit.png")));
@@ -226,4 +234,25 @@ public class Main_Exercice_03 extends Application implements Initializable{
 //			}
 //		}).start());
 	}
+	
+	Runnable r_launch = new Runnable() {		
+		@Override
+		public void run() {
+			
+			while (true){
+				try {
+					launch.setImage(new Image("launch_2.png"));	
+					Thread.sleep(100);
+					launch.setImage(new Image("launch.png"));	
+					Thread.sleep(50);
+					
+				} catch (InterruptedException e) {
+					launch.setImage(new Image("launch_nb.png"));
+					e.printStackTrace();
+				}
+			}
+			
+		}
+	};
+	
 }
