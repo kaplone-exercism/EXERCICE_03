@@ -9,48 +9,63 @@ import javafx.scene.paint.Color;
 
 public class Contact {
 	
-	public static boolean estEnContact(Rectangle r, Rectangle mur){
-		
-		System.out.println(r.getX());
-		System.out.println(mur.getLayoutX());
-		
-		if (r.getX() + r.getWidth() >= mur.getLayoutX()){
-			//r.setX(0); reviens completement a gauche
-			r.setX(mur.getLayoutX() - r.getWidth());
-			r.setFill(Color.RED);
-		}
-		
-
-		return false; // ça sert pas a grand chose
-	}
+	private static double ecart = 0;
 	
 	public static int rienNeBloque(Rectangle r, Sens sens, AnchorPane root){
 		
-		int delta = 0;
-
-		for (Node n : root.getChildren()){
-			try {
-				Mur m = (Mur) n;
-				if (m.estEnContact(sens, r) < 5){
-					if (m.estOuvert(sens, r)){
-						if(m.bloque(sens, r)){
-							return m.estEnContact(sens, r);
-						}
-						else {
-							delta = 5;
-						}	
-					}
-					else {
-						return m.estEnContact(sens, r);
-					}
-				}
-				else {
-					delta = 5;
-				}
-			}
-			catch (ClassCastException cce){				
-			}
-		}
-		return delta;		
+		return root.getChildren().stream()
+								 .filter(a -> a instanceof Mur)
+								 .mapToInt(a -> ((Mur) a).estEnContact(sens, r))
+								 .min()
+								 .getAsInt();	
+	
 	}
+	
+    public static double rienNeBloque(Rectangle r, Sens sens, AnchorPane root, Double delta){
+    	
+    	
+    	Rectangle r_t = rect_temporaire(r, sens, delta);
+    	System.out.println(r_t.toString());
+    	System.out.println("ecart : " + ecart);
+    	
+    	
+    	root.getChildren().stream()
+         		 .filter(a -> a instanceof Mur)
+         		 .mapToDouble(a -> ((Mur) a).estEnContact(sens, r_t, ecart)) // l'ecart c'est la progression des deux cotés qui s'allongent
+         		 .forEach(a -> System.out.println(a));                       // estEnContact doit retourner une valeur acceptable pour le coté qui se racourcis
+    	
+    	return root.getChildren().stream()
+    	                  		 .filter(a -> a instanceof Mur) 
+    	                  		 .mapToDouble(a -> ((Mur) a).estEnContact(sens, r_t, ecart))
+    	                  		 .min()
+    	                  		 .getAsDouble();	
+	}
+    
+    public static Rectangle rect_temporaire(Rectangle r, Sens sens, Double delta){
+    	
+        Rectangle r_temp = new Rectangle();
+        double surface = r.computeAreaInScreen();
+        double newSize;
+    	
+    	if (sens == Sens.HAUT || sens == Sens.BAS){
+
+    		r_temp.setHeight(r.getHeight() + delta);
+    		
+    		newSize = surface / r_temp.getHeight();
+    		ecart = (r.getWidth() - newSize) / 2;
+    		
+        	r_temp.setX(r.getX() + ecart);
+    		r_temp.setWidth(newSize);
+    	}
+    	else {
+    		r_temp.setWidth(r.getWidth() + delta);
+    		
+    		newSize = surface / r_temp.getWidth();
+    		ecart = (r.getHeight() - newSize) / 2;
+    		
+        	r_temp.setY(r.getY() + ecart);
+    		r_temp.setHeight(newSize);
+    	}
+    	return r_temp;
+    }
 }

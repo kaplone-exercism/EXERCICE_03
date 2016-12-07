@@ -33,29 +33,6 @@ public class Mur extends Rectangle{
 		
 	}
 	
-	public boolean bloque(Sens sens, Rectangle r){
-//		switch (sens){
-//		case BAS :
-//	    case HAUT : if (orientation == Orientation.VERTICAL){
-//	    	           return false;
-//	                }
-//	                else {
-//	                   return this.debut - (r.getX() + r.getWidth()) >= 0 
-//	                	   || r.getX() - this.fin >= 0; 
-//	                }
-//	     
-//	    case GAUCHE :
-//	    case DROITE : if (orientation == Orientation.HORIZONTAL){
-// 			           return false;
-//						}
-//						else {
-//						   return this.debut - (r.getY() + r.getHeight()) >= 0
-//							   || r.getY() - this.fin >= 0 ; 
-//						}
-//	    }
-        return false;
-	}
-	
 	public boolean estOuvert(Sens sens, Rectangle r){
 		
 		switch (sens){
@@ -87,14 +64,16 @@ public class Mur extends Rectangle{
 		switch (sens){
 		    case HAUT : if (orientation == Orientation.VERTICAL){
                 			if(r.getY() - this.fin >= 0 
-                			&& r.getY() - this.fin < 5){
+                			&& r.getY() - this.fin < 5
+                			&& ! this.estOuvert(sens, r)){
              	               return (int) (r.getY() - this.fin);
                             }
                             else return 5;
 		                }
 		                else {
 		                   if(r.getY() - (this.position + this.epaisseur) >= 0 
-		                   && r.getY() - (this.position + this.epaisseur) < 5){
+		                   && r.getY() - (this.position + this.epaisseur) < 5
+		                   && ! this.estOuvert(sens, r)){ // modifier le sens ou créer un estOuvert adapté
 		                	   return (int) (r.getY() - (this.position + this.epaisseur));
 		                   }
 		                   else return 5; 
@@ -102,47 +81,115 @@ public class Mur extends Rectangle{
 		    
 		    case BAS : if (orientation == Orientation.VERTICAL){
 		    			  if(this.debut - (r.getY() + r.getHeight()) >= 0
-	    				  && this.debut - (r.getY() + r.getHeight()) <= 5){
+	    				  && this.debut - (r.getY() + r.getHeight()) <= 5
+	    				  && ! this.estOuvert(sens, r)){
 						     return  (int) (this.debut - (r.getY() + r.getHeight())); 
 					   }
 					   else return 5;
              			}
              			else {
              			   if(this.position - (r.getY() + r.getHeight()) >= 0 
-             			   && this.position - (r.getY() + r.getHeight()) <= 5){
+             			   && this.position - (r.getY() + r.getHeight()) <= 5
+             			   && ! this.estOuvert(sens, r)){
              				   return (int) (this.position - (r.getY() + r.getHeight()));
              			   }
+             			   else return 5;
                         }
 		    case GAUCHE : if (orientation == Orientation.HORIZONTAL){
 		    				if(r.getX() - this.fin >= 0
-		    				&& r.getX() - this.fin <= 5){
+		    				&& r.getX() - this.fin <= 5
+		    				&& ! this.estOuvert(sens, r)){
 		    					return  (int) (r.getX() - this.fin); 
 					   }
 					   else return 5;
              			}
              			else {
              			   if(r.getX() - (this.position + this.epaisseur) >= 0 
-             				   && r.getX() - (this.position + this.epaisseur) <= 5){
+             				   && r.getX() - (this.position + this.epaisseur) <= 5
+             				   && ! this.estOuvert(sens, r)){
              				   return (int) (r.getX() - (this.position + this.epaisseur));
              			   } 
              			   else return 5;
              			}
 		    case DROITE : if (orientation == Orientation.HORIZONTAL){
 		    				if(this.debut - (r.getX() + r.getWidth()) >= 0
-		    				&& this.debut - (r.getX() + r.getWidth()) <= 5){
+		    				&& this.debut - (r.getX() + r.getWidth()) <= 5
+		    				&& ! this.estOuvert(sens, r)){
 							   return  (int) (this.debut - (r.getX() + r.getWidth())); 
 						   }
 						   else return 5;
   						}
   						else {
   						   if(this.position - (r.getX() + r.getWidth()) >= 0
-  						   && this.position - (r.getX() + r.getWidth()) <= 5){
+  						   && this.position - (r.getX() + r.getWidth()) <= 5
+  						   && ! this.estOuvert(sens, r)){
   							   return  (int) (this.position - (r.getX() + r.getWidth())); 
   						   }
   						   else return 5;
   						}
 		}
 		return 5;
+	}
+	
+    public double estEnContact(Sens sens, Rectangle r, double max){
+		
+		switch (sens){
+		    case DROITE :
+		    case GAUCHE : if (orientation == Orientation.VERTICAL){
+                			if(r.getY() - this.fin >= 0 
+                			&& r.getY() - this.fin < - max
+                			&& ! this.estOuvert(Sens.HAUT, r)){ // revoir estOuvert ?
+             	               return r.getY() - this.fin; // autre valeur : une diminution acceptable
+                            }
+                			else if(this.debut - (r.getY() + r.getHeight()) >= 0
+          	    				  && this.debut - (r.getY() + r.getHeight()) <= - max
+          	    				  && ! this.estOuvert(Sens.HAUT, r)){
+          						     return  this.debut - (r.getY() + r.getHeight()); // autre valeur : une diminution acceptable
+          					}
+                            else return max; // autre valeur : la diminution maximum (0.5)
+		                }
+		                else {
+		                   if(r.getY() - (this.position + this.epaisseur) >= 0 
+		                   && r.getY() - (this.position + this.epaisseur) < - max
+		                   && ! this.estOuvert(Sens.HAUT, r)){
+		                	   return r.getY() - (this.position + this.epaisseur);
+		                   }
+		                   else if(this.position - (r.getY() + r.getHeight()) >= 0 
+		             			   && this.position - (r.getY() + r.getHeight()) <= - max
+		             			  && ! this.estOuvert(Sens.HAUT, r)){
+		             				   return this.position - (r.getY() + r.getHeight());
+		             			   }
+		                   else return max; 
+		                }
+		    case HAUT :
+		    case BAS : if (orientation == Orientation.HORIZONTAL){
+		    				if(r.getX() - this.fin >= 0
+		    				&& r.getX() - this.fin <= - max
+		    				&& ! this.estOuvert(Sens.DROITE, r)){
+		    					return  r.getX() - this.fin; 
+					   }
+		    				else if(this.debut - (r.getX() + r.getWidth()) >= 0
+				    				&& this.debut - (r.getX() + r.getWidth()) <= - max
+				    				&& ! this.estOuvert(Sens.DROITE, r)){
+									   return  this.debut - (r.getX() + r.getWidth()); 
+								   }
+					        else return max;
+             			}
+             			else {
+             			   if(r.getX() - (this.position + this.epaisseur) >= 0 
+             				   && r.getX() - (this.position + this.epaisseur) <= - max
+             				  && ! this.estOuvert(Sens.DROITE, r)){
+             				   return r.getX() - (this.position + this.epaisseur);
+             			   } 
+             			   else if(this.position - (r.getX() + r.getWidth()) >= 0
+         						   && this.position - (r.getX() + r.getWidth()) <= - max
+         						 && ! this.estOuvert(Sens.DROITE, r)){
+         							   return  this.position - (r.getX() + r.getWidth()); 
+         						   }
+             			   else return max;
+             			}
+		}
+		return max;
 	}
 	
     public boolean estEnTravers(Sens sens){

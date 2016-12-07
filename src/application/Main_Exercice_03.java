@@ -16,6 +16,8 @@ import models.Mur;
 import models.Settings;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -62,6 +64,8 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	
 	Thread t_launch;
 	
+	Double deltaChange = 0.5;
+	
 	@Override
 	public void start(Stage primaryStage) {
 		
@@ -82,13 +86,35 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	
 	public Rectangle gerer_keys(Rectangle r, KeyEvent e, AnchorPane root, Stage importedstage){
 		
-		
+		Double surface_r = r.computeAreaInScreen();
+		double newSize;
+		double ecart;
+			
 		KeyCode kc = e.getCode();
 		
 		//System.out.println(kc.getName());
 		
 		switch (kc) {
-		case UP:   r.setY(r.getY() - Contact.rienNeBloque(r, Sens.HAUT, root));
+		case UP:   if(e.isShortcutDown()){
+			          if (e.isShiftDown() &&
+			        	  r.getWidth() > 20){
+			        	  r.setHeight(r.getHeight() + Contact.rienNeBloque(r, Sens.HAUT, root, deltaChange));
+			          }
+			          else if (r.getHeight() > 20){
+			        	  r.setHeight(r.getHeight() + Contact.rienNeBloque(r, Sens.HAUT, root, - deltaChange));
+			          }
+	
+			newSize = surface_r / r.getHeight();
+    		ecart = (r.getWidth() - newSize) / 2;
+    		
+			r.setX(r.getX() + ecart);
+			r.setWidth(newSize);
+			
+			System.out.println("_" + r.toString());
+		            }
+		            else {
+			r.setY(r.getY() - Contact.rienNeBloque(r, Sens.HAUT, root));
+		            }
 			break;
 		case DOWN: r.setY(r.getY() + Contact.rienNeBloque(r, Sens.BAS, root));
 		    break;
