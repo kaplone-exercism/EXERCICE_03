@@ -63,6 +63,9 @@ public class Main_Exercice_03 extends Application implements Initializable{
 	Stage stagePrincipal;
 	
 	Thread t_launch;
+	Thread tm_launch;
+	Thread ts_launch;
+	Thread te_launch;
 	
 	Double deltaChange = 0.5;
 	
@@ -225,8 +228,14 @@ public class Main_Exercice_03 extends Application implements Initializable{
 //				"ina.fr"			
 //		};
 		
-		maze.setOnMouseEntered(a -> maze.setImage(new Image("maze_v2.png")));
-		maze.setOnMouseExited(a -> maze.setImage(new Image("maze_v2_2_nb.png")));
+		maze.setOnMouseEntered(a -> {
+			tm_launch = new Thread(m_launch);
+			tm_launch.start();
+		});
+		maze.setOnMouseExited(a -> {
+			tm_launch.stop();
+			maze.setImage(new Image("maze_v2_2_nb.png"));
+		});
 		
 		launch.setOnMouseEntered(a -> {
 			t_launch = new Thread(r_launch);
@@ -237,11 +246,23 @@ public class Main_Exercice_03 extends Application implements Initializable{
 			launch.setImage(new Image("launch_nb.png"));
 		});
 		
-		exit.setOnMouseEntered(a -> exit.setImage(new Image("exit_0.png")));
-		exit.setOnMouseExited(a -> exit.setImage(new Image("exit.png")));
+		exit.setOnMouseEntered(a -> {
+			te_launch = new Thread(e_launch);
+			te_launch.start();
+		});
+		exit.setOnMouseExited(a -> {
+			te_launch.stop();
+			exit.setImage(new Image("exit.png"));
+		});
 		
-		settings.setOnMouseEntered(a -> settings.setImage(new Image("settings2.png")));
-		settings.setOnMouseExited(a -> settings.setImage(new Image("settings2_nb.png")));
+		settings.setOnMouseEntered(a -> {
+			ts_launch = new Thread(s_launch);
+			ts_launch.start();
+		});
+		settings.setOnMouseExited(a -> {
+			ts_launch.stop();
+			settings.setImage(new Image("settings2_nb.png"));
+		});
 		
 		settings.setOnMouseClicked(a -> nouvelleFenetreSettings());
 		exit.setOnMouseClicked(a -> System.exit(0));
@@ -277,6 +298,126 @@ public class Main_Exercice_03 extends Application implements Initializable{
 					
 				} catch (InterruptedException e) {
 					launch.setImage(new Image("launch_nb.png"));
+					e.printStackTrace();
+				}
+			}
+			
+		}
+	};
+	
+	Runnable m_launch = new Runnable() {		
+		@Override
+		public void run() {
+			
+			while (true){
+				try {
+					maze.setImage(new Image("maze_v2_color1.png"));	
+					Thread.sleep(80);
+					maze.setImage(new Image("maze_v2_color2.png"));	
+					Thread.sleep(50);
+					maze.setImage(new Image("maze_v2_color3.png"));	
+					Thread.sleep(70);
+					
+				} catch (InterruptedException e) {
+					maze.setImage(new Image("maze_v2.png"));
+					e.printStackTrace();
+				}
+			}
+			
+		}
+	};
+	
+	Runnable s_launch = new Runnable() {		
+		@Override
+		public void run() {
+			
+			while (true){
+				try {
+					settings.setImage(new Image("settings2_r2.png"));	
+					Thread.sleep(80);
+					settings.setImage(new Image("settings2_r3.png"));	
+					Thread.sleep(80);
+					settings.setImage(new Image("settings2_r4.png"));	
+					Thread.sleep(80);
+					settings.setImage(new Image("settings2_r5.png"));	
+					Thread.sleep(80);
+					settings.setImage(new Image("settings2_r6.png"));	
+					Thread.sleep(80);
+					settings.setImage(new Image("settings2_r7.png"));	
+					Thread.sleep(80);
+					settings.setImage(new Image("settings2_r8.png"));	
+					Thread.sleep(80);
+					settings.setImage(new Image("settings2_r9.png"));	
+					Thread.sleep(80);
+					settings.setImage(new Image("settings2_r10.png"));	
+					Thread.sleep(80);
+					settings.setImage(new Image("settings2_r11.png"));	
+					Thread.sleep(80);
+					settings.setImage(new Image("settings2_r12.png"));	
+					Thread.sleep(80);
+					settings.setImage(new Image("settings2_r13.png"));	
+					Thread.sleep(80);
+					
+				} catch (InterruptedException e) {
+					settings.setImage(new Image("settings2_nb.png"));
+					e.printStackTrace();
+				}
+			}
+			
+		}
+	};
+	
+	Runnable e_launch = new Runnable() {		
+		@Override
+		public void run() {
+			
+			while (true){
+				try {
+					exit.setImage(new Image("exit_0_01.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_01_.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_02.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_02_.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_03.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_03_.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_04.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_04_.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_05.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_05_.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_06.png"));	
+					Thread.sleep(300);
+					exit.setImage(new Image("exit_0_05_.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_05.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_04_.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_04.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_03_.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_03.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_02_.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_02.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_01_.png"));	
+					Thread.sleep(80);
+					exit.setImage(new Image("exit_0_01.png"));	
+					Thread.sleep(220);
+					
+				} catch (InterruptedException e) {
+					exit.setImage(new Image("exit.png"));
 					e.printStackTrace();
 				}
 			}
